@@ -29,14 +29,28 @@ Produce:
       amber  - forward with a named caveat. The recommendation may stand but
                one or more inputs need confirming.
       green  - forward as is. The artefact survives the three checks.
+
+    Calibration rule: amber is the default for artefacts with sourcing or
+    framing problems where the central claim still survives. Only escalate
+    to red if (a) a specific number materially inverts the recommendation,
+    or (b) a load-bearing citation is unverifiable AND no alternative
+    source is plausible. If the core finding is directionally true but
+    needs a named fix, that is amber, not red. If a thin Custom artefact
+    has only one claim and a single missing source, that is amber, not red
+    - the author has not yet had the chance to add the source.
   - headline: one sentence the user could paste into a Slack message to their
     manager. It should name the artefact's central claim and the level in
-    plain English. Example: "The 47% Cohort A attrition number is wrong;
-    the underlying retention concern is real but the memo needs a rewrite
+    plain English. If the prior stages contain a mix of red, amber, and
+    green claims, the headline must name what survives, not only what
+    fails. Example: "The 47% Cohort A attrition number is wrong; the
+    underlying retention concern is real but the memo needs a rewrite
     before it goes to the SLT."
-  - one_fix: one specific edit the user could make in the next 10 minutes
-    that would move the artefact up a level. Name the section, the claim,
-    and the change. Not "verify your sources". Example: "Replace the 'People
+  - one_fix: ONE edit to the document, completable in 10 minutes. Name the
+    section, the claim, and the change. Single-action only - do not chain
+    compound tasks. If the edit requires first locating a source, write it
+    as one action: "In paragraph X, replace [claim] with the figure from
+    [where the user must look], or if absent, replace with [specific
+    alternative]." Not "verify your sources". Example: "Replace the 'People
     Analytics Q3 Pulse, p.18' citation in paragraph 2 with the actual Q1
     2026 attrition report from the People Analytics shared drive, and
     update the figure from 47% to whatever the report says."
