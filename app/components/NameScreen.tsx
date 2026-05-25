@@ -1,43 +1,27 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { TopKicker, PrimaryCTA, CenteredFormScreen } from '@/app/components/atoms';
 import { useDelayed } from '@/lib/hooks';
 
-interface GateProps {
-  onPass: (passcode: string) => void;
+interface NameScreenProps {
+  initialValue: string;
+  onEnter: (name: string) => void;
 }
 
-export default function Gate({ onPass }: GateProps) {
-  const [v, setV] = useState('');
-  const [hasKey, setHasKey] = useState(false);
+export default function NameScreen({ initialValue, onEnter }: NameScreenProps) {
+  const [v, setV] = useState(initialValue || '');
   const headerOn = useDelayed(80, []);
   const formOn = useDelayed(220, []);
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const key = params.get('key');
-    if (key && key.trim().length > 0) {
-      setHasKey(true);
-      onPass(key.trim());
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const enabled = v.trim().length >= 1;
 
   function submit(e?: React.FormEvent) {
     e?.preventDefault?.();
-    const trimmed = v.trim();
-    if (!trimmed) return;
-    const url = new URL(window.location.href);
-    url.searchParams.set('key', trimmed);
-    window.history.replaceState({}, '', url.toString());
-    onPass(trimmed);
+    if (enabled) onEnter(v.trim());
   }
 
-  if (hasKey) return null;
-
   return (
-    <CenteredFormScreen label="00 Gate">
+    <CenteredFormScreen label="01 Name">
       <form onSubmit={submit} className="w-full">
         <div className={'rv ' + (headerOn ? 'on' : '')}>
           <TopKicker />
@@ -45,24 +29,25 @@ export default function Gate({ onPass }: GateProps) {
             Decision-Grade Verifier
           </h1>
           <p className="mt-4 text-slate-300 text-[15px] leading-relaxed">
-            Enter the session passcode to begin.
+            A short interactive exercise. Let&rsquo;s start with your name.
           </p>
         </div>
         <div className={'rv mt-9 ' + (formOn ? 'on' : '')}>
-          <label htmlFor="sessionPasscode" className="block text-[12px] tracking-[0.14em] text-slate-400 uppercase mb-3">
-            Session passcode
+          <label htmlFor="participantName" className="block text-[12px] tracking-[0.14em] text-slate-400 uppercase mb-3">
+            Your name
           </label>
           <input
-            id="sessionPasscode"
+            id="participantName"
             type="text"
             value={v}
             onChange={(e) => setV(e.target.value)}
-            placeholder="On your screen"
+            placeholder="First name is fine"
             className="focus-amber w-full bg-transparent border border-slate-700 px-4 py-3 text-slate-100 placeholder-slate-600 text-[15px] focus:outline-none transition-colors"
+            autoComplete="given-name"
             autoFocus
           />
           <div className="mt-5">
-            <PrimaryCTA full type="submit">Enter the lab</PrimaryCTA>
+            <PrimaryCTA full type="submit" disabled={!enabled}>Continue</PrimaryCTA>
           </div>
         </div>
       </form>

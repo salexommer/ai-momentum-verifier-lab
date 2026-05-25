@@ -7,12 +7,16 @@ import type {
   FlagOutput,
   VerdictOutput,
 } from '@/app/api/lab/_schemas';
+import { TopKicker, PrimaryCTA, PrevLink, ScreenContainer } from '@/app/components/atoms';
+import { useDelayed } from '@/lib/hooks';
 
 type LineageResultProps = {
   sourceAnchor: SourceAnchorOutput;
   triangulate: TriangulateOutput;
   flag: FlagOutput;
   verdict: VerdictOutput;
+  onBack?: () => void;
+  onContinue: () => void;
 };
 
 type FlagLevel = 'red' | 'amber' | 'green';
@@ -78,7 +82,12 @@ export default function LineageResult({
   triangulate,
   flag,
   verdict,
+  onBack,
+  onContinue,
 }: LineageResultProps) {
+  const kickerOn = useDelayed(60, []);
+  const headOn = useDelayed(210, []);
+
   const claimCounts = sourceAnchor.claims.reduce(
     (acc, c) => {
       acc[c.status] = (acc[c.status] ?? 0) + 1;
@@ -109,11 +118,30 @@ export default function LineageResult({
   );
 
   return (
-    <section className="max-w-5xl mx-auto p-8 space-y-12">
+    <ScreenContainer label="07 Reviewing">
+      <div className={'rv ' + (kickerOn ? 'on' : '')}>
+        <TopKicker />
+      </div>
+
+      <div className={'rv ' + (headOn ? 'on' : '')}>
+        <h1 className="font-serif font-light text-[36px] md:text-[44px] leading-[1.05] tracking-[-0.01em] text-slate-100 mt-5">
+          The verdict.{' '}
+          <span className="text-slate-300">Read it. Disagree with it. Then set your thresholds.</span>
+        </h1>
+        <p className="text-slate-400 text-[15.5px] leading-relaxed mt-6 max-w-[600px]">
+          Four streamed stages, one verdict. The Verifier is also fallible — its confidence note
+          tells you what to double-check.
+        </p>
+      </div>
+
       {/* BAND 1 — Lineage visual */}
-      <div>
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3, duration: 0.35, ease: 'easeOut' }}
+        className="mt-10"
+      >
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-stretch">
-          {/* Stage 1 — Source-Anchor */}
           <motion.div
             custom={0}
             variants={cardVariants}
@@ -140,7 +168,6 @@ export default function LineageResult({
             ›
           </motion.div>
 
-          {/* Stage 2 — Triangulate */}
           <motion.div
             custom={1}
             variants={cardVariants}
@@ -167,7 +194,6 @@ export default function LineageResult({
             ›
           </motion.div>
 
-          {/* Stage 3 — Flag */}
           <motion.div
             custom={2}
             variants={cardVariants}
@@ -194,7 +220,6 @@ export default function LineageResult({
             ›
           </motion.div>
 
-          {/* Stage 4 — Verdict */}
           <motion.div
             custom={3}
             variants={cardVariants}
@@ -212,20 +237,17 @@ export default function LineageResult({
             </span>
           </motion.div>
         </div>
-      </div>
+      </motion.div>
 
       {/* BAND 2 — Theory sidebar */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, duration: 0.4, ease: 'easeOut' }}
-        className="bg-slate-900 rounded-xl p-6"
+        className="bg-slate-900 rounded-xl p-6 mt-8"
       >
-        <h2 className="text-xl font-semibold text-slate-100 mb-6">
-          Theory you just applied.
-        </h2>
+        <h2 className="text-xl font-semibold text-slate-100 mb-6">Theory you just applied.</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Left — The three checks */}
           <div>
             <p className="text-xs uppercase tracking-widest text-slate-500 mb-3">
               The three checks
@@ -253,7 +275,6 @@ export default function LineageResult({
             </ul>
           </div>
 
-          {/* Right — The four failure modes */}
           <div>
             <p className="text-xs uppercase tracking-widest text-slate-500 mb-3">
               The four failure modes
@@ -272,9 +293,7 @@ export default function LineageResult({
                       {mode.replace(/_/g, ' ')}
                     </span>
                     {encountered && (
-                      <span className="text-xs text-amber-400 font-semibold">
-                        x{count}
-                      </span>
+                      <span className="text-xs text-amber-400 font-semibold">x{count}</span>
                     )}
                   </li>
                 );
@@ -288,8 +307,8 @@ export default function LineageResult({
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.65, duration: 0.4, ease: 'easeOut' }}
-        className="space-y-5"
+        transition={{ delay: 0.7, duration: 0.4, ease: 'easeOut' }}
+        className="space-y-5 mt-8"
       >
         <div className="flex items-center gap-4">
           <span
@@ -315,6 +334,12 @@ export default function LineageResult({
           <p className="text-slate-400 text-sm italic">{verdict.confidence_note}</p>
         </div>
       </motion.div>
-    </section>
+
+      {/* CTA row */}
+      <div className="mt-12 flex items-center justify-between">
+        <PrevLink onClick={onBack} />
+        <PrimaryCTA onClick={onContinue}>Set your thresholds &rarr;</PrimaryCTA>
+      </div>
+    </ScreenContainer>
   );
 }

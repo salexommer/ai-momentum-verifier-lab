@@ -56,7 +56,7 @@ export default function DownloadButtons({
     URL.revokeObjectURL(url);
   }
 
-  const buttonClass = `flex-1 px-6 py-4 rounded-lg font-semibold transition text-lg ${
+  const buttonClass = `px-6 py-4 rounded-lg font-semibold transition text-lg ${
     disabled
       ? 'bg-slate-800 text-slate-500 cursor-not-allowed'
       : 'bg-amber-400 text-slate-950 hover:bg-amber-300'
@@ -64,23 +64,33 @@ export default function DownloadButtons({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-col sm:flex-row gap-4 max-w-3xl mx-auto p-8">
-        <button
-          className={buttonClass}
-          disabled={disabled}
-          onClick={() => handleDownload('langdock')}
-        >
-          Take this into Langdock
-        </button>
-        <button
-          className={buttonClass}
-          disabled={disabled}
-          onClick={() => handleDownload('claude')}
-        >
-          Take this into Claude
-        </button>
+      <div className="flex flex-col sm:flex-row gap-6 max-w-3xl mx-auto px-6 sm:px-8 py-4">
+        <div className="flex flex-col flex-1">
+          <button
+            className={buttonClass}
+            disabled={disabled}
+            onClick={() => handleDownload('langdock')}
+          >
+            Take this into Langdock
+          </button>
+          <p className="text-xs text-slate-400 mt-2 leading-relaxed max-w-[260px]">
+            Drop into a Langdock assistant. Run the Verifier on any AI output you paste.
+          </p>
+        </div>
+        <div className="flex flex-col flex-1">
+          <button
+            className={buttonClass}
+            disabled={disabled}
+            onClick={() => handleDownload('claude')}
+          >
+            Take this into Claude
+          </button>
+          <p className="text-xs text-slate-400 mt-2 leading-relaxed max-w-[260px]">
+            Drop into your <code className="font-mono">.claude/agents/</code> folder. Claude runs the Verifier on demand from your terminal.
+          </p>
+        </div>
       </div>
-      <p className="text-xs text-slate-500 text-center">
+      <p className="text-xs text-slate-500 mt-6 text-center">
         {disabled
           ? 'Pick a threshold for red, amber, and green to enable downloads.'
           : 'These files are personalised with your stream, encountered failure modes, and thresholds.'}
