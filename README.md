@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Momentum Verifier Lab
 
-## Getting Started
+> Topic 4 participant lab for the Personio AI Momentum programme. ~25-minute hands-on segment where ~200 participants verify an AI-generated artefact against three checks (source-anchor, triangulate, confidence label) and four failure modes (fabricated_source, drifted_date, plausible_wrong_number, framing_distortion). Each participant downloads two runtime-personalised verifier files (Langdock Skill + Claude Code subagent).
 
-First, run the development server:
+**Status:** scaffold (Phase 1). Stage routes, components, download endpoint, integration, and testing land in Phases 2 through 6.
+
+## Stack
+
+- Next.js 16 (App Router), TypeScript, Tailwind 4
+- Vercel AI SDK (`ai`, `@ai-sdk/anthropic`, `@ai-sdk/react`)
+- Zod for schema-validated streaming objects
+- Framer Motion for staged reveals
+- `@upstash/ratelimit` + `@upstash/redis` for per-IP rate limiting
+
+## Environment variables
+
+Required (set in Vercel):
+
+| Variable | Purpose |
+|---|---|
+| `ANTHROPIC_API_KEY` | Claude Sonnet 4.6 API key. **Org must be on Tier 2+ for cohort delivery.** |
+| `VERIFIER_LAB_KEY` | Session passcode in `?key=` query string. Rotate within 1h of session end. |
+| `UPSTASH_REDIS_REST_URL` | Upstash Redis REST URL (free tier sufficient). |
+| `UPSTASH_REDIS_REST_TOKEN` | Upstash Redis REST token. |
+
+See `.env.example` for the template.
+
+## Development
 
 ```bash
+npm install
+cp .env.example .env.local  # fill in real values
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# open http://localhost:3000/?key=verify
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Build spec
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The canonical build spec lives in the AI Momentum monorepo:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `baseline/topic-4-data-literacy/resources/Alex's Notes Topic 4/verifier-lab-starter-kit.md` - source of truth for prompts, schemas, scenarios, templates
+- `baseline/topic-4-data-literacy/resources/Alex's Notes Topic 4/verifier-lab-build-plan.md` - phase-by-phase build plan
 
-## Learn More
+## Fallback prompt
 
-To learn more about Next.js, take a look at the following resources:
+If the lab is unreachable mid-session, participants can paste the fallback prompt (printed on the lab slide) directly into Langdock or Claude. The fallback runs the same four-stage verifier without the wrapper - degraded UX, still functional.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Companion lab
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+`salexommer/ai-momentum-lab` - the Topic 3 Shadow Workflow Lab. Same stack family. Different verifier vs. shadow purpose.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Built for the Personio AI Momentum programme by Alex Sommer (Oli) with Claude.
