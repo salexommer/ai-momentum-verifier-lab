@@ -44,11 +44,23 @@ Do NOT:
   creation", "alignment", "robust", "leverage".
 - Hedge a clear finding to be polite.`;
 
-export const ratelimit = new Ratelimit({
-  redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(20, '1 m'),
-  prefix: 'verifier-lab',
-});
+type LimitResult = { success: boolean };
+
+function buildRatelimit(): { limit: (key: string) => Promise<LimitResult> } {
+  if (
+    process.env.UPSTASH_REDIS_REST_URL &&
+    process.env.UPSTASH_REDIS_REST_TOKEN
+  ) {
+    return new Ratelimit({
+      redis: Redis.fromEnv(),
+      limiter: Ratelimit.slidingWindow(20, '1 m'),
+      prefix: 'verifier-lab',
+    });
+  }
+  return { limit: async () => ({ success: true }) };
+}
+
+export const ratelimit = buildRatelimit();
 
 export function checkKey(req: Request) {
   const url = new URL(req.url);
