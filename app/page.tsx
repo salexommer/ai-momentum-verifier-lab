@@ -8,7 +8,6 @@ import FailureModesExplainerScreen from './components/FailureModesExplainerScree
 import ScenarioPicker from './components/ScenarioPicker';
 import ArtefactView from './components/ArtefactView';
 import VerifierStages from './components/VerifierStages';
-import LineageResult from './components/LineageResult';
 import ThresholdScreen from './components/ThresholdScreen';
 import DownloadButtons from './components/DownloadButtons';
 import {
@@ -34,7 +33,6 @@ type Screen =
   | 'picking'
   | 'viewing'
   | 'running'
-  | 'reviewing'
   | 'threshold'
   | 'downloads';
 
@@ -93,7 +91,7 @@ export default function Home() {
 
   function handleAllDone(r: StageResults) {
     setResults(r);
-    go('reviewing');
+    go('threshold');
   }
 
   function handleVerifyAnother() {
@@ -159,22 +157,12 @@ export default function Home() {
             onAllDone={handleAllDone}
           />
         ) : null;
-      case 'reviewing':
-        return results ? (
-          <LineageResult
-            sourceAnchor={results.sourceAnchor}
-            triangulate={results.triangulate}
-            flag={results.flag}
-            verdict={results.verdict}
-            onContinue={() => go('threshold')}
-          />
-        ) : null;
       case 'threshold':
         return (
           <ThresholdScreen
             value={thresholds}
             onChange={setThresholds}
-            onBack={() => go('reviewing')}
+            onBack={() => go('running')}
             onContinue={() => go('downloads')}
           />
         );

@@ -24,7 +24,7 @@ export default function ChecksExplainerScreen({ name, onBack, onNext }: ChecksEx
     },
     {
       label: 'TRIANGULATE',
-      kicker: 'Re-ask the same question in a second framing — a different time window, cohort, baseline, or tool. Look at the diff, not the agreement.',
+      kicker: 'Re-ask the same question in a second framing: a different time window, cohort, baseline, or tool. Look at the diff, not the agreement.',
     },
     {
       label: 'CONFIDENCE LABEL',
@@ -43,9 +43,8 @@ export default function ChecksExplainerScreen({ name, onBack, onNext }: ChecksEx
       </h1>
 
       <p className={'rv mt-7 text-slate-200 text-[17px] leading-relaxed ' + (leadOn ? 'on' : '')} style={{ maxWidth: 600 }}>
-        Today you&rsquo;ll run an AI-generated output through a four-stage Verifier
-        — the same one Alex just demoed. The Verifier is built on three checks,
-        applied in turn.
+        Today you&rsquo;ll run an AI-generated output through a four-stage Verifier.
+        The Verifier is built on three checks, applied in turn.
       </p>
 
       <p className={'rv mt-4 text-slate-400 text-[15.5px] leading-relaxed ' + (bodyOn ? 'on' : '')} style={{ maxWidth: 600 }}>

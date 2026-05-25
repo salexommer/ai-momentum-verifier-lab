@@ -19,7 +19,7 @@ export default function FailureModesExplainerScreen({ onBack, onNext }: FailureM
   const modes = [
     {
       label: 'FABRICATED SOURCE',
-      kicker: 'The output cites a doc, URL, or report that does not exist — or one that exists but does not say what the artefact claims.',
+      kicker: 'The output cites a doc, URL, or report that does not exist, or one that exists but does not say what the artefact claims.',
     },
     {
       label: 'DRIFTED DATE',
